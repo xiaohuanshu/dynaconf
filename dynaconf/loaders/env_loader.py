@@ -1,12 +1,15 @@
 from __future__ import annotations
-
 from os import environ
 
 from dynaconf.utils import missing
 from dynaconf.utils import upperfy
 from dynaconf.utils.parse_conf import parse_conf_data
-from dynaconf.vendor.dotenv import cli as dotenv_cli
 
+try:
+    from dynaconf.vendor.dotenv import cli as dotenv_cli
+except (ImportError, FileNotFoundError):
+    # https://github.com/dynaconf/dynaconf/issues/853
+    dotenv_cli = None
 
 IDENTIFIER = "env"
 
@@ -84,6 +87,11 @@ def load_from_env(
 
 def write(settings_path, settings_data, **kwargs):
     """Write data to .env file"""
+    if dotenv_cli is None:
+        raise RuntimeError(
+            "Unable to write to .env file in the current directory. "
+            "Please check if the filesystem is available."
+        )
     for key, value in settings_data.items():
         quote_mode = (
             isinstance(value, str)
