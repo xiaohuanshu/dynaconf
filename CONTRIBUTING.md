@@ -87,6 +87,28 @@ make test_vault
 
 ```
 
+### Publish and Release (WIP)
+
+Only maintainers with write access can publish.
+
+Currently, the "publish-and-release" workflow will be triggered
+on tagged commits. It will do the following:
+
+* run usual CI
+* build and test the distribution
+* publish to PyPI
+* create GitHub Release
+* publish docs to Netlify (TODO)
+
+The tagged commits can be pushed manually (*) with `git push --tags git@github.com:dynaconf/dynaconf.git master` and is expected to have:
+
+* updated changelog using `git-changelog`. GitHub Release action will use some
+custom marks created with this tool to generate a github Release.
+* updated version references
+* standard header, body and tag
+
+(*) - release script update is in progress.
+
 ## Code of Conduct
 
 ### Our Pledge
